@@ -29,6 +29,18 @@ def get_empleado_byid(id):
 
     return jsonify(resultados)
 
+# Endpoint para obtener la informacion del usuario por medio del username
+@app.route("/empleados/<string:username>", methods=["GET"])
+def get_empleado_byid(username):
+    resultados = []
+    result = modelos_empleados.obtener_empleado_por_username(username)
+    claves = ['id_empleado','nombre','primero_apellido','segundo_apellido','RFC','CURP','NSS','numero_telefono','tipo_empleado']
+    for objetos in result:
+        list2dic = dict(zip(claves, objetos))
+        resultados.append(list2dic)
+
+    return jsonify(resultados)
+
 # Endpoint de inicio de sesion
 @app.route("/empleados/login/", methods=["POST"])
 def login():
@@ -50,9 +62,41 @@ def login():
         return jsonify({"estado": "ok", "codigo": 1, "mensaje": "Inicio de sesión exitoso"}), 200
 
 #Enpoint para registrar empleados
+@app.route("/empleados/agregar/",methods=["POST"])
+def add_empleados():
+    data = request.get_json()
 
+    nombre = data.get("nombre")
+    primero_apellido = data.get("primer_apellido")
+    segundo_apellido = data.get("segundo apellido")
+    RFC = data.get("RFC")
+    CURP = data.get("CURP")
+    NSS = data.get("NSS")
+    numero_telefono  = data.get("numero_telefono")
+    tipo_empleado = data.get("tipo_empleado")
+    usuario = data.get("usuario")
+    contraseña = data.get("contraseña")
+
+    resultado = modelos_empleados.agregar_empleado(nombre, primero_apellido, segundo_apellido, RFC, CURP, NSS, numero_telefono, tipo_empleado, usuario, contraseña)
+
+    if resultado == 1:
+        return jsonify({"estado": "correcto", "codigo": 1, "mensaje": "Usuario Registrado con exito"})
+    else:
+        return jsonify({"estado": "error", "codigo": 0, "mensaje": "Hubo un problema con el registro"})
 
 #Enpoint para eliminar empleados
+@app.route("/empleados/<int:id>", methods=["DELETE"])
+def delete_empleado(id):
+    resultados = []
+    result = modelos_empleados.eliminar_empleado(id)
+
+    if result == 2:
+        return jsonify({"estado": "error", "codigo": 2, "mensaje": "El usuario no existe"})
+    elif result == 0:
+        return jsonify({"estado": "error", "codigo": 0, "mensaje": "Hubo un problema al eliminar"})
+    else:
+        return jsonify({"estado": "correcto", "codigo": 1, "mensaje": "Usuario Eliminado"})
+
 
 if __name__ == '__main__':
     app.run(host="localhost", port=3001, debug=True)
