@@ -1,14 +1,10 @@
-from contextlib import nullcontext
-from warnings import catch_warnings
-
-from mysql.connector.constants import flag_is_set
 
 from bd import conexion
 
 def obtener_empleados():
     cnx = conexion()
     cursor = cnx.cursor()
-    cursor.execute("SELECT e.id_empleado,e.nombre,e.primero_apellido,e.segundo_apellido,e.RFC,e.CURP,e.NSS,e.numero_telefono,te.nombre as 'Ocupacion' FROM empleados e JOIN tipo_empleado te ON e.tipo_empleado = te.id_tipo_empleado ")
+    cursor.execute("SELECT e.id_empleado,e.nombre,e.primer_apellido,e.segundo_apellido,e.RFC,e.CURP,e.NSS,e.numero_telefono,te.nombre as 'Ocupacion' FROM empleados e JOIN tipo_empleado te ON e.tipo_empleado = te.id_tipo_empleado ")
     data = cursor.fetchall()
 
     cursor.close()
@@ -19,7 +15,7 @@ def obtener_empleados():
 def obtener_empleado_porid(id):
     cnx = conexion()
     cursor = cnx.cursor()
-    cursor.execute("SELECT e.id_empleado,e.nombre,e.primero_apellido,e.segundo_apellido,e.RFC,e.CURP,e.NSS,e.numero_telefono,te.nombre as 'Ocupacion' FROM empleados e JOIN tipo_empleado te ON e.tipo_empleado = te.id_tipo_empleado WHERE e.id_empleado = %s", id)
+    cursor.execute("SELECT e.id_empleado,e.nombre,e.primer_apellido,e.segundo_apellido,e.RFC,e.CURP,e.NSS,e.numero_telefono,te.nombre as 'Ocupacion' FROM empleados e JOIN tipo_empleado te ON e.tipo_empleado = te.id_tipo_empleado WHERE e.id_empleado = %s", id)
     data = cursor.fetchall()
 
     cursor.close()
@@ -54,7 +50,7 @@ def agregar_empleado(nombre, primero_apellido, segundo_apellido, RFC, CURP, NSS,
     cnx = conexion()
     cursor = cnx.cursor()
 
-    comand = "INSERT INTO empleados(nombre, primero_apellido, segundo_apellido, RFC, CURP, NSS, numero_telefono, tipo_empleado, usuario, contraseña) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    comand = "INSERT INTO empleados(nombre, primer_apellido, segundo_apellido, RFC, CURP, NSS, numero_telefono, tipo_empleado, usuario, contraseña) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     data = [nombre, primero_apellido, segundo_apellido, RFC, CURP, NSS, numero_telefono, tipo_empleado, usuario, contraseña]
 
     try:
@@ -92,7 +88,7 @@ def eliminar_empleado(id):
 def obtener_empleado_por_username(username):
     cnx = conexion()
     cursor = cnx.cursor()
-    cursor.execute("SELECT e.id_empleado,e.nombre,e.primero_apellido,e.segundo_apellido,e.RFC,e.CURP,e.NSS,e.numero_telefono,te.nombre as 'Ocupacion' FROM empleados e JOIN tipo_empleado te ON e.tipo_empleado = te.id_tipo_empleado WHERE e.usuario = %s", username)
+    cursor.execute("SELECT e.id_empleado,e.nombre,e.primer_apellido,e.segundo_apellido,e.RFC,e.CURP,e.NSS,e.numero_telefono,te.nombre as 'Ocupacion' FROM empleados e JOIN tipo_empleado te ON e.tipo_empleado = te.id_tipo_empleado WHERE e.usuario = %s", username)
     data = cursor.fetchall()
 
     cursor.close()
